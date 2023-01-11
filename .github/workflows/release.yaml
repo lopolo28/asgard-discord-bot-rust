@@ -1,0 +1,54 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Create and publish a Docker image
+
+on:
+  push:
+    branches: ['master']
+    tags: ['v*']
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push-image:
+    name: Build app and push Docker image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Get tag
+        id: get-tag
+        run: |
+          VERSION=$(echo "${GITHUB_REF##*/}")
+          echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/4sgard-dev/${{ github.event.repository.name }}:latest,ghcr.io/4sgard-dev/${{ github.event.repository.name }}:${{ env.VERSION }}
+          labels: ${{ steps.meta.outputs.labels }}

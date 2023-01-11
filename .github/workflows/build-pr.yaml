@@ -1,0 +1,30 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Build and Test application on PR
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-test-application:
+    name: Build and Test application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@e551b19e49efd4e98792db7592c17c09b89db8d8
+        with:
+          context: .
+          push: false
+          tags: ${{ github.event.repository.name }}:main
