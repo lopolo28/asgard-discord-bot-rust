@@ -27,4 +27,4 @@ jobs:
         with:
           context: .
           push: false
-          tags: ${{ github.event.repository.name }}:main
+          tags: ${{ github.event.repository.name }}:master
