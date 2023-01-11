@@ -11,4 +11,3 @@ jobs:
         with:
           release-type: rust
           package-name: release-please-action
-          token: ${{ secrets.PAT }}
