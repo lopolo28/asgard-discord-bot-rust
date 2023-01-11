@@ -1,7 +1,8 @@
-FROM rust:1.66 AS builder
+FROM rust:1.66.0 as builder
+WORKDIR /usr/src/myapp
 COPY . .
-RUN cargo build --release
-
+RUN cargo install --path .
+ 
 FROM debian:buster-slim
-COPY --from=builder ./target/release/docker ./target/release/docker
-CMD ["/target/release/docker"]
+COPY --from=builder /usr/local/cargo/bin/myapp /usr/local/bin/myapp
+CMD ["myapp"]
