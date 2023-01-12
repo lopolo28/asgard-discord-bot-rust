@@ -1,9 +1,6 @@
-use std::ops::IndexMut;
-use std::{env, vec};
+use std::{env};
 
-use http::StatusCode;
-use parsercher::dom::{tag, Tag};
-use raxios::{ContentType, Raxios, RaxiosConfig, RaxiosHeaders, RaxiosOptions};
+use raxios::{ContentType, Raxios, RaxiosHeaders, RaxiosOptions};
 use regex::Regex;
 use serenity::async_trait;
 use serenity::framework::standard::macros::{command, group};
@@ -74,43 +71,28 @@ async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
 }
 
 async fn onmessage(ctx: &Context, msg: &Message) -> CommandResult {
-    let mut imdb_link = &msg.content;
-    
-    if imdb_link.starts_with(&"https://letterboxd.com/") {
-        let mut p: RaxiosHeaders = RaxiosHeaders::new();
-        p.insert(String::from("User-Agent"), String::from("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36"));
+    let mut imdb_link= &msg.content;
 
-        let config: RaxiosConfig = RaxiosConfig {
-            timeout_ms: Option::from(5000),
-            headers: Option::from(p),
-            accept: ContentType::ApplicationXml,
-            content_type: ContentType::ApplicationXml,
-        };
-        //TODO: Complete imdb grab from letterBox
-        let response = Raxios::new(&imdb_link, Option::from(config))?;
+    if msg.content.starts_with(&"https://letterboxd.com/") {
+        let response = reqwest::get(imdb_link).await?;
 
-        let client = Raxios::new("", None)?;
-        let data_to_send = ToSend {
-            field1: String::from("Hello World"),
-        };
-        let result = client
-            .post::<ToReceive, ToSend>("/endpoint", Some(data_to_send), None)
-            .await?;
-        if StatusCode::is_success(&result.status){
-            let body = result.body.unwrap();
-            let dom = parsercher::parse(&body.field1.as_str()).unwrap();
-            let tag = parsercher::search_attrs(
-                &dom,&vec!["data-tract-action=\"IMDB\""]);
+        if response.status().is_success() {
+            
+            let body = response.text().await?;
+            let document = scraper::Html::parse_document(&body);
+            let selector = scraper::Selector::parse(r#"a[data-track-action="IMDb"]"#).unwrap();
+            let letterboxlink = String::from(document.select(&selector).map(|x| x.value().attr("href")).zip(0..101).next().unwrap().0.unwrap());
+            
+            //imdb_link = letterboxlink.clone();
         }
     }
-    msg.reply(ctx,imdb_link);
-    if msg.content.contains(&"imdb.com") {
 
+    if msg.content.contains(&"imdb.com") {
         let regex =
             Regex::new(r"^(?:http://|https://)?(?:www\.|m\.)?(?:imdb.com/title/)?(tt[0-9]*)")
                 .unwrap();
 
-        let result = regex.captures(&msg.content);
+        let result = regex.captures(&imdb_link);
 
         let link = &result.unwrap()[1];
 
