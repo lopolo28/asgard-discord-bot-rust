@@ -71,21 +71,21 @@ async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
 }
 
 async fn onmessage(ctx: &Context, msg: &Message) -> CommandResult {
-    let mut imdb_link= &msg.content;
-
-    if msg.content.starts_with(&"https://letterboxd.com/") {
-        let response = reqwest::get(imdb_link).await?;
-
+    let mut imdb_link = if msg.content.starts_with(&"https://letterboxd.com/") {
+        let response = reqwest::get(&msg.content).await?;
         if response.status().is_success() {
             
             let body = response.text().await?;
             let document = scraper::Html::parse_document(&body);
             let selector = scraper::Selector::parse(r#"a[data-track-action="IMDb"]"#).unwrap();
-            let letterboxlink = String::from(document.select(&selector).map(|x| x.value().attr("href")).zip(0..101).next().unwrap().0.unwrap());
+            let letterboxlink = document.select(&selector).map(|x| x.value().attr("href")).zip(0..101).next().unwrap().0.unwrap();
             
-            //imdb_link = letterboxlink.clone();
+            String::from(letterboxlink);
         }
     }
+    else {
+        &msg.content;
+    };
 
     if msg.content.contains(&"imdb.com") {
         let regex =
