@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.5...v1.0.6) (2023-01-21)
+
+
+### Bug Fixes
+
+* RaxiosResponse ([9dbe0e3](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/9dbe0e3bb6b68ca83b507a80c15bbae2842b41c9))
+
 ## [1.0.5](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.4...v1.0.5) (2023-01-21)
 
 
