@@ -6,14 +6,14 @@ pub mod asgard_events {
     use serenity::model::prelude::Message;
     use std::env;
 
+    #[derive(serde::Serialize, serde::Deserialize, Debug, PartialEq)]
+    struct ToReturn {}
     #[allow(non_snake_case)]
     #[derive(serde::Serialize, serde::Deserialize, Debug)]
     struct ToSend {
         imdbId: String,
     }
-    #[derive(serde::Serialize, serde::Deserialize, Debug)]
-    struct ToReceive {
-    }
+
     pub async fn onmessage(ctx: &Context, msg: &Message) {
         if msg.content.starts_with("https://letterboxd.com/") {
             let response = reqwest::get(&msg.content)
@@ -56,19 +56,18 @@ pub mod asgard_events {
         headers.insert(String::from("discord-id"), msg.author.id.0.to_string());
         let uri = env::var("API_URL").expect("API_URL not found");
 
-        let client = Raxios::new(&uri, None).ok();
+        let client = Raxios::new(&uri, None).expect("Creating of client failed");
 
         let options: RaxiosOptions = RaxiosOptions {
             headers: Option::from(headers),
-            accept: None,
+            accept: Option::from(ContentType::TextXml),
             content_type: Option::from(ContentType::Json),
             params: None,
             deserialize_body: true,
         };
-        
+
         let response = client
-            .expect("Creating of client failed")
-            .post::<ToReceive,ToSend>(
+            .post::<ToReturn, ToSend>(
                 "/suggestions",
                 Option::from(ToSend {
                     imdbId: String::from(link),
@@ -77,7 +76,7 @@ pub mod asgard_events {
             )
             .await
             .expect("Processing of response failed");
-            
+
         let reaction_emoji = match response.status.as_u16() {
             201 => '💾',
             400 => '🚨',
