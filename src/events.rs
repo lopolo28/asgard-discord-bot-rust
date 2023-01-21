@@ -6,11 +6,14 @@ pub mod asgard_events {
     use serenity::model::prelude::Message;
     use std::env;
 
+    #[allow(non_snake_case)]
     #[derive(serde::Serialize, serde::Deserialize, Debug)]
     struct ToSend {
         imdbId: String,
     }
-
+    #[derive(serde::Serialize, serde::Deserialize, Debug)]
+    struct ToReceive {
+    }
     pub async fn onmessage(ctx: &Context, msg: &Message) {
         if msg.content.starts_with("https://letterboxd.com/") {
             let response = reqwest::get(&msg.content)
@@ -62,10 +65,10 @@ pub mod asgard_events {
             params: None,
             deserialize_body: true,
         };
-
+        
         let response = client
             .expect("Creating of client failed")
-            .post::<u32, ToSend>(
+            .post::<ToReceive,ToSend>(
                 "/suggestions",
                 Option::from(ToSend {
                     imdbId: String::from(link),
