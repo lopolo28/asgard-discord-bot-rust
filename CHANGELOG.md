@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.2...v1.0.3) (2023-01-21)
+
+
+### Bug Fixes
+
+* Creation of url endpoint ([a99c691](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/a99c691bd7c213bcb3f75177b1490da23fb28990))
+
 ## [1.0.2](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.1...v1.0.2) (2023-01-21)
 
 
