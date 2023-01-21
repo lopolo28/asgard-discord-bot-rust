@@ -29,7 +29,12 @@ struct Handler;
 #[async_trait]
 impl EventHandler for Handler {
     async fn message(&self, ctx: Context, msg: Message) {
-        onmessage(&ctx, &msg).await;
+        let envid = env::var("CHANNEL_ID").expect("CHANNEL_ID not found");
+        let moviechannel =
+            u64::from_str_radix(&envid, 10).expect("Unable to parse CHANNEL_ID to u64");
+        if msg.channel_id.0 == moviechannel {
+            onmessage(&ctx, &msg).await;
+        }
     }
 }
 
@@ -45,11 +50,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 async fn bot() -> Result<(), Box<dyn std::error::Error>> {
     let framework = StandardFramework::new()
-        .configure(|c| c.prefix("!")) // set the bot's prefix to "~"
+        .configure(|c| c.prefix("!")) // set the bot's prefix to "!"
         .group(&GENERAL_GROUP);
 
     // Login with a bot token from the environment
-    let token = env::var("BOT_TOKEN").unwrap();
+    let token = env::var("BOT_TOKEN not found").expect("BOT_TOKEN");
     let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT;
 
     let mut client = Client::builder(token, intents)
