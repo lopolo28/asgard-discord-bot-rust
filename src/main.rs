@@ -54,7 +54,7 @@ async fn bot() -> Result<(), Box<dyn std::error::Error>> {
         .group(&GENERAL_GROUP);
 
     // Login with a bot token from the environment
-    let token = env::var("BOT_TOKEN not found").expect("BOT_TOKEN");
+    let token = env::var("BOT_TOKEN").expect("BOT_TOKEN not found");
     let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT;
 
     let mut client = Client::builder(token, intents)
