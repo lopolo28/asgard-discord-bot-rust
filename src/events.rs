@@ -44,7 +44,7 @@ pub mod asgard_events {
         let link = &result.expect("No result of Regex")[1];
 
         let mut headers: RaxiosHeaders = RaxiosHeaders::new();
-        headers.insert(String::from("imdbId"), String::from(link));
+        headers.insert(String::from("discord-id"), msg.author.id.0.to_string());
         let uri = env::var("API_URL").expect("API_URL not found") + "/suggestions";
 
         let client = Raxios::new(&uri, None).ok();
@@ -62,6 +62,7 @@ pub mod asgard_events {
             .post::<u32, &str>(&uri, Option::from(link), Option::from(options))
             .await
             .expect("Processing of response failed");
+            
         let reaction_emoji = match response.status.as_u16() {
             201 => '💾',
             400 => '🚨',
