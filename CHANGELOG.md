@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.1...v1.0.2) (2023-01-21)
+
+
+### Bug Fixes
+
+* bump reqwest from 0.11.13 to 0.11.14 ([#12](https://github.com/4sgard-dev/asgard-discord-bot-rust/issues/12)) ([b5c6d17](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/b5c6d1765ff76e139131f905d343962b58706887))
+
 ## [1.0.1](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.0...v1.0.1) (2023-01-21)
 
 
