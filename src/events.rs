@@ -51,7 +51,7 @@ pub mod asgard_events {
 
         let mut headers: RaxiosHeaders = RaxiosHeaders::new();
         headers.insert(String::from("discord-id"), msg.author.id.0.to_string());
-        let uri = env::var("API_URL").expect("API_URL not found") + "/suggestions";
+        let uri = env::var("API_URL").expect("API_URL not found");
 
         let client = Raxios::new(&uri, None).ok();
 
@@ -66,7 +66,7 @@ pub mod asgard_events {
         let response = client
             .expect("Creating of client failed")
             .post::<u32, ToSend>(
-                &uri,
+                "/suggestions",
                 Option::from(ToSend {
                     imdbid: String::from(link),
                 }),
