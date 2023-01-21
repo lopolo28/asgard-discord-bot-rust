@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.4...v1.0.5) (2023-01-21)
+
+
+### Bug Fixes
+
+* Recieve content ([c660a94](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/c660a9443a326ee0614d2e2143d9ca1e07d932e3))
+
 ## [1.0.4](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.3...v1.0.4) (2023-01-21)
 
 
