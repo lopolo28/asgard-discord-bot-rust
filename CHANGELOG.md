@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.3...v1.0.4) (2023-01-21)
+
+
+### Bug Fixes
+
+* change to send object ([c16b820](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/c16b82050b42874976a1daf9aa2eb0d38f04e47b))
+
 ## [1.0.3](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.2...v1.0.3) (2023-01-21)
 
 
