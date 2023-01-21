@@ -60,7 +60,7 @@ pub mod asgard_events {
 
         let options: RaxiosOptions = RaxiosOptions {
             headers: Option::from(headers),
-            accept: Option::from(ContentType::Json),
+            accept: None,
             content_type: Option::from(ContentType::Json),
             params: None,
             deserialize_body: true,
@@ -77,7 +77,7 @@ pub mod asgard_events {
             )
             .await
             .expect("Processing of response failed");
-
+            
         let reaction_emoji = match response.status.as_u16() {
             201 => '💾',
             400 => '🚨',
