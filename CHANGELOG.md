@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.0...v1.0.1) (2023-01-21)
+
+
+### Bug Fixes
+
+* add openssl ([6564d59](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/6564d59e9884c75a1e5a762cc4aff5f93a2b6852))
+
 ## [1.0.0](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v0.1.3...v1.0.0) (2023-01-21)
 
 
