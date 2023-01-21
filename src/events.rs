@@ -35,7 +35,7 @@ pub mod asgard_events {
         let mut headers: RaxiosHeaders = RaxiosHeaders::new();
         headers.insert(String::from("imdbId"), String::from(link));
         let uri = env::var("API_URL").unwrap() + "/suggestions";
-        let client = Raxios::new("", None).ok();
+        let client = Raxios::new(&uri, None).ok();
 
         let options: RaxiosOptions = RaxiosOptions {
             headers: Option::from(headers),

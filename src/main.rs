@@ -1,3 +1,5 @@
+use std::env;
+
 use serenity::async_trait;
 use serenity::framework::standard::macros::{command, group};
 use serenity::framework::standard::{CommandResult, StandardFramework};
@@ -47,7 +49,7 @@ async fn bot() -> Result<(), Box<dyn std::error::Error>> {
         .group(&GENERAL_GROUP);
 
     // Login with a bot token from the environment
-    let token = "OTAzMjAyNzk0MDMzNTMyOTY4.GvhHCb.2v7yFExQeR1gx-rvTfPsb2EG3JzxftL3bb76pU"; //env::var("BOT_TOKEN").unwrap();
+    let token = env::var("BOT_TOKEN").unwrap();
     let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT;
 
     let mut client = Client::builder(token, intents)
