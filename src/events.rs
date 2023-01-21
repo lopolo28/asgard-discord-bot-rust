@@ -5,6 +5,12 @@ pub mod asgard_events {
     use serenity::client::Context;
     use serenity::model::prelude::Message;
     use std::env;
+
+    #[derive(serde::Serialize, serde::Deserialize, Debug)]
+    struct ToSend {
+        imdbid: String,
+    }
+
     pub async fn onmessage(ctx: &Context, msg: &Message) {
         if msg.content.starts_with("https://letterboxd.com/") {
             let response = reqwest::get(&msg.content)
@@ -59,10 +65,16 @@ pub mod asgard_events {
 
         let response = client
             .expect("Creating of client failed")
-            .post::<u32, &str>(&uri, Option::from(link), Option::from(options))
+            .post::<u32, ToSend>(
+                &uri,
+                Option::from(ToSend {
+                    imdbid: String::from(link),
+                }),
+                Option::from(options),
+            )
             .await
             .expect("Processing of response failed");
-            
+
         let reaction_emoji = match response.status.as_u16() {
             201 => '💾',
             400 => '🚨',
