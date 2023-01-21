@@ -1,12 +1,11 @@
-use std::{env};
-
-use raxios::{ContentType, Raxios, RaxiosHeaders, RaxiosOptions};
-use regex::Regex;
 use serenity::async_trait;
 use serenity::framework::standard::macros::{command, group};
 use serenity::framework::standard::{CommandResult, StandardFramework};
 use serenity::model::channel::Message;
 use serenity::prelude::*;
+
+mod events;
+use events::asgard_events::onmessage;
 
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
 struct ToReceive {
@@ -36,6 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     tokio::runtime::Builder::new_current_thread()
         .enable_io()
         .enable_time()
+        .enable_all()
         .build()
         .unwrap()
         .block_on(bot())
@@ -43,12 +43,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 async fn bot() -> Result<(), Box<dyn std::error::Error>> {
     let framework = StandardFramework::new()
-        .configure(|c| c.prefix("~")) // set the bot's prefix to "~"
+        .configure(|c| c.prefix("!")) // set the bot's prefix to "~"
         .group(&GENERAL_GROUP);
 
     // Login with a bot token from the environment
-    let token = "token-here";
+    let token = "OTAzMjAyNzk0MDMzNTMyOTY4.GvhHCb.2v7yFExQeR1gx-rvTfPsb2EG3JzxftL3bb76pU"; //env::var("BOT_TOKEN").unwrap();
     let intents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT;
+
     let mut client = Client::builder(token, intents)
         .event_handler(Handler)
         .framework(framework)
@@ -56,8 +57,8 @@ async fn bot() -> Result<(), Box<dyn std::error::Error>> {
         .expect("Error creating client");
 
     // start listening for events by starting a single shard
-    if let Err(why) = client.start().await {
-        println!("An error occurred while running the client: {:?}", why);
+    if let Err(err) = client.start().await {
+        println!("An error occurred while running the client: {:?}", err);
     }
 
     Ok(())
@@ -66,63 +67,5 @@ async fn bot() -> Result<(), Box<dyn std::error::Error>> {
 #[command]
 async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
     msg.reply(ctx, "Pong!").await?;
-
-    Ok(())
-}
-
-async fn onmessage(ctx: &Context, msg: &Message) -> CommandResult {
-    let mut imdb_link = if msg.content.starts_with(&"https://letterboxd.com/") {
-        let response = reqwest::get(&msg.content).await?;
-        if response.status().is_success() {
-            
-            let body = response.text().await?;
-            let document = scraper::Html::parse_document(&body);
-            let selector = scraper::Selector::parse(r#"a[data-track-action="IMDb"]"#).unwrap();
-            let letterboxlink = document.select(&selector).map(|x| x.value().attr("href")).zip(0..101).next().unwrap().0.unwrap();
-            
-            String::from(letterboxlink);
-        }
-    }
-    else {
-        &msg.content;
-    };
-
-    if msg.content.contains(&"imdb.com") {
-        let regex =
-            Regex::new(r"^(?:http://|https://)?(?:www\.|m\.)?(?:imdb.com/title/)?(tt[0-9]*)")
-                .unwrap();
-
-        let result = regex.captures(&imdb_link);
-
-        let link = &result.unwrap()[1];
-
-        let mut headers: RaxiosHeaders = RaxiosHeaders::new();
-        headers.insert(String::from("imdbId"), String::from(link));
-        let uri = env::var("API_URL").unwrap() + "/suggestions";
-        let client = Raxios::new("", None)?;
-
-        let options: RaxiosOptions = RaxiosOptions {
-            headers: Option::from(headers),
-            accept: Option::from(ContentType::Json),
-            content_type: Option::from(ContentType::Json),
-            params: None,
-            deserialize_body: true,
-        };
-        // TODO: Implement response to 4sgard movie db
-        let response = client
-            .post::<u32, &str>(&uri, Option::from(link), Option::from(options))
-            .await?;
-
-        let mut reaction_emoji = '🥵';
-
-        println!("{}", link);
-        match response.status.as_u16() {
-            201 => reaction_emoji = '💾',
-            400 => reaction_emoji = '🚨',
-            _ => reaction_emoji = '🥵',
-        }
-
-        msg.react(ctx, reaction_emoji).await?;
-    }
     Ok(())
 }
