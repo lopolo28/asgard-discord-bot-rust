@@ -8,7 +8,7 @@ pub mod asgard_events {
 
     #[derive(serde::Serialize, serde::Deserialize, Debug)]
     struct ToSend {
-        imdbid: String,
+        imdbId: String,
     }
 
     pub async fn onmessage(ctx: &Context, msg: &Message) {
@@ -68,7 +68,7 @@ pub mod asgard_events {
             .post::<u32, ToSend>(
                 "/suggestions",
                 Option::from(ToSend {
-                    imdbid: String::from(link),
+                    imdbId: String::from(link),
                 }),
                 Option::from(options),
             )
