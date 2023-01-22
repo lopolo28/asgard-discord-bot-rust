@@ -60,10 +60,10 @@ pub mod asgard_events {
 
         let options: RaxiosOptions = RaxiosOptions {
             headers: Option::from(headers),
-            accept: Option::from(ContentType::TextXml),
+            accept: Option::None,
             content_type: Option::from(ContentType::Json),
             params: None,
-            deserialize_body: true,
+            deserialize_body: false,
         };
 
         let response = client
