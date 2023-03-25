@@ -50,7 +50,10 @@ pub mod asgard_events {
 
         let result = regex.captures(imdb_link);
 
-        let link = &result.expect("No result of Regex")[1];
+        let link = match result {
+            Some(link) => link[1].to_string(),
+            None => return,
+        };
 
         let mut headers: RaxiosHeaders = RaxiosHeaders::new();
         headers.insert(String::from("discord-id"), msg.author.id.0.to_string());
@@ -65,17 +68,19 @@ pub mod asgard_events {
             params: None,
             deserialize_body: false,
         };
-
-        let response = client
-            .post::<ToReturn, ToSend>(
-                "/suggestions",
-                Option::from(ToSend {
-                    imdbId: String::from(link),
-                }),
-                Option::from(options),
-            )
-            .await
-            .expect("Processing of response failed");
+        let request = client.post::<ToReturn, ToSend>(
+            "/suggestions",
+            Option::from(ToSend { imdbId: link }),
+            Option::from(options),
+        );
+        let response = match request.await {
+            Ok(response) => response,
+            Err(err) => {
+                println!("{}", err);
+                msg.react(ctx, '🚨').await.ok();
+                return;
+            }
+        };
 
         let reaction_emoji = match response.status.as_u16() {
             201 => '💾',
