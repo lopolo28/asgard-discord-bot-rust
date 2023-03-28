@@ -10,7 +10,7 @@ http = "0.2.8"
 parsercher = "3.1.6"
 raxios = "0.5.2"
 regex = "1.7.1"
-serde = "1.0.152"
+serde = "1.0.159"
 serenity = "0.11"
 tokio = { version = "1.24.1", features = ["rt", "full"] }
 reqwest = { version = "0.11", features = ["blocking"] }
