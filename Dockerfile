@@ -1,4 +1,4 @@
-FROM rust:1.66.0 as builder
+FROM rust:1.68.2 as builder
 WORKDIR /usr/src/asgard-discord-bot-rust
 COPY . .
 RUN cargo install --path .
