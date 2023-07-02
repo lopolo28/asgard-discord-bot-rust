@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.10](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.9...v1.0.10) (2023-07-02)
+
+
+### Bug Fixes
+
+* change docker image base to bullseye ([8909583](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/89095832739db8df94c29c911c6dfebd6f0296ca))
+
 ## [1.0.9](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.8...v1.0.9) (2023-07-02)
 
 
