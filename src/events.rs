@@ -20,9 +20,25 @@ pub mod asgard_events {
                 .await
                 .expect("Letterboxd scrapping: No response recieved");
             if response.status().is_success() {
-                let body = response.text().await.expect("Missing response body");
-
-                let dom = parse(&body).expect("HTML string too long");
+                let body = match response.text().await {
+                    Ok(body) => body,
+                    Err(e) => {
+                        eprintln!("{}", e);
+                        msg.react(ctx, '🤖').await.ok();
+                        msg.react(ctx, '🚨').await.ok();
+                        return;
+                    }
+                };
+                
+                let dom = match parse(&body) {
+                    Ok(dom) => dom,
+                    Err(e) => {
+                        eprintln!("{}", e);
+                        msg.react(ctx, '🤖').await.ok();
+                        msg.react(ctx, '🚨').await.ok();
+                        return;
+                    }
+                };
 
                 let mut needle = Tag::new("a");
                 needle.set_attr("data-track-action", "IMDb");
@@ -59,7 +75,15 @@ pub mod asgard_events {
         headers.insert(String::from("discord-id"), msg.author.id.0.to_string());
         let uri = env::var("API_URL").expect("API_URL not found");
 
-        let client = Raxios::new(&uri, None).expect("Creating of client failed");
+        let client = match Raxios::new(&uri, None) {
+            Ok(client) => client,
+            Err(e) => {
+                eprintln!("{}", e);
+                msg.react(ctx, '🤖').await.ok();
+                msg.react(ctx, '🚨').await.ok();
+                return;
+            }
+        };
 
         let options: RaxiosOptions = RaxiosOptions {
             headers: Option::from(headers),
@@ -84,7 +108,7 @@ pub mod asgard_events {
 
         let reaction_emoji = match response.status.as_u16() {
             201 => '💾',
-            400 => '🚨',
+            400..=499 => '🚨',
             _ => '🥵',
         };
         msg.react(ctx, reaction_emoji).await.ok();

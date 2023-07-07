@@ -3,18 +3,35 @@ name = "asgard-discord-bot-rust"
 version = "1.0.8"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[profile.dev]
+opt-level = 0
+debug = true
+split-debuginfo = '...'
+debug-assertions = true
+overflow-checks = true
+lto = false
+panic = 'unwind'
+incremental = true
+codegen-units = 256
+rpath = false
+
+[profile.release]
+opt-level = 3
+debug = false
+split-debuginfo = '...'
+debug-assertions = false
+overflow-checks = false
+lto = false
+panic = 'unwind'
+incremental = false
+codegen-units = 16
+rpath = false
 
 [dependencies]
-http = "0.2.8"
 parsercher = "3.1.6"
 raxios = "0.5.2"
-regex = "1.7.1"
-serde = "1.0.152"
-serenity = "0.11"
-tokio = { version = "1.24.1", features = ["rt", "full"] }
-reqwest = { version = "0.11", features = ["blocking"] }
-scraper = "0.15.0"
-html5ever = "0.26.0"
-tendril = "0.4.3"
-tugger = "0.18.0"
+regex = "1.8.4"
+serde = "1.0.164"
+serenity = "0.11.6"
+tokio = { version = "1.29.1", features = ["rt", "full"] }
+reqwest = { version = "0.11.18", features = ["blocking"] }
