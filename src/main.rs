@@ -19,7 +19,7 @@ struct ToSend {
 }
 
 #[group]
-#[commands(ping)]
+#[commands(about, ping)]
 struct General;
 
 #[group]
@@ -73,5 +73,14 @@ async fn bot() -> Result<(), Box<dyn std::error::Error>> {
 #[command]
 async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
     msg.reply(ctx, "Pong!").await?;
+    Ok(())
+}
+#[command]
+async fn about(ctx: &Context, msg: &Message) -> CommandResult {
+    msg.reply(
+        ctx,
+        "Here is source code: https://github.com/4sgard-dev/asgard-discord-bot-rust",
+    )
+    .await?;
     Ok(())
 }

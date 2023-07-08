@@ -29,10 +29,19 @@ pub mod asgard_events {
                         return;
                     }
                 };
-                
+
                 let dom = match parse(&body) {
                     Ok(dom) => dom,
                     Err(e) => {
+                        match find_imdb_url(&body).await {
+                            Ok(url) => {
+                                imdb(ctx, msg, url).await;
+                                return;
+                            }
+                            Err(e) => {
+                                print!("{}", e);
+                            }
+                        };
                         eprintln!("{}", e);
                         msg.react(ctx, '🤖').await.ok();
                         msg.react(ctx, '🚨').await.ok();
@@ -68,7 +77,12 @@ pub mod asgard_events {
 
         let link = match result {
             Some(link) => link[1].to_string(),
-            None => return,
+            None => {
+                eprintln!("Link not found");
+                msg.react(ctx, '🤖').await.ok();
+                msg.react(ctx, '🚨').await.ok();
+                return;
+            }
         };
 
         let mut headers: RaxiosHeaders = RaxiosHeaders::new();
@@ -113,4 +127,25 @@ pub mod asgard_events {
         };
         msg.react(ctx, reaction_emoji).await.ok();
     }
+
+    async fn find_imdb_url(input: &str) -> Result<&str, &'static str> {
+        let mut remaining = input;
+        while let Some(a_start) = remaining.find("<a ") {
+            remaining = &remaining[a_start..];
+            if let Some(action_end) = remaining.find('>') {
+                let action_attr = &remaining[..action_end];
+                if action_attr.contains(r#"data-track-action="IMDb""#) {
+                    if let Some(href_start) = remaining.find(r#"href=""#) {
+                        let remaining = &remaining[href_start + 6..];
+                        if let Some(href_end) = remaining.find('"') {
+                            return Ok(&remaining[..href_end]);
+                        }
+                    }
+                }
+            }
+            remaining = &remaining[3..];
+        }
+        Err("Attribute not found")
+    }
+    
 }
