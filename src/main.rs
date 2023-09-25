@@ -8,15 +8,15 @@ use std::env;
 mod events;
 use events::asgard_events::onmessage;
 
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
-struct ToReceive {
-    field1: String,
-}
+// #[derive(serde::Serialize, serde::Deserialize, Debug)]
+// struct ToReceive {
+//     field1: String,
+// }
 
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
-struct ToSend {
-    field1: String,
-}
+// #[derive(serde::Serialize, serde::Deserialize, Debug)]
+// struct ToSend {
+//     field1: String,
+// }
 
 #[group]
 #[commands(about, ping)]
@@ -33,6 +33,9 @@ impl EventHandler for Handler {
         if msg.channel_id.0 == moviechannel {
             onmessage(&ctx, &msg).await;
         }
+    }
+    async fn ready(&self, ctx: Context, _: serenity::model::prelude::Ready) {
+        ctx.set_activity(serenity::model::gateway::Activity::competing("YOUR MOM")).await;
     }
 }
 
@@ -79,7 +82,7 @@ async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
 async fn about(ctx: &Context, msg: &Message) -> CommandResult {
     msg.reply(
         ctx,
-        "Here is source code: https://github.com/4sgard-dev/asgard-discord-bot-rust",
+        "Here is source code: https://github.com/4sgard-dev/asgard-discord-bot-rust\r\n💾 - Bot Happy\r\n🤖 - Bot Error\r\n🚨 - Server Error\r\n🥵 - Duplicate Suggestion",
     )
     .await?;
     Ok(())
