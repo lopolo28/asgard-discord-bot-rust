@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.11](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.10...v1.0.11) (2023-07-08)
+
+
+### Miscellaneous Chores
+
+* release 1.0.11 ([fb5979a](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/fb5979a0bd8c45ffca668e03219d03db13dde9d3))
+
 ## [1.0.10](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.9...v1.0.10) (2023-07-02)
 
 
