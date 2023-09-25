@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.12](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.11...v1.0.12) (2023-07-08)
+
+
+### Bug Fixes
+
+* imdb link from letterboxd will be now scrapped manually if scrapper could not parse document ([1c98bb1](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/1c98bb15672bd93d6d8547d72ad3fed9b58a07ba))
+
 ## [1.0.11](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.10...v1.0.11) (2023-07-08)
 
 
