@@ -25,7 +25,6 @@ pub mod asgard_events {
                     Err(e) => {
                         eprintln!("{}", e);
                         msg.react(ctx, '🤖').await.ok();
-                        msg.react(ctx, '🚨').await.ok();
                         return;
                     }
                 };
@@ -44,7 +43,6 @@ pub mod asgard_events {
                         };
                         eprintln!("{}", e);
                         msg.react(ctx, '🤖').await.ok();
-                        msg.react(ctx, '🚨').await.ok();
                         return;
                     }
                 };
@@ -80,7 +78,6 @@ pub mod asgard_events {
             None => {
                 eprintln!("Link not found");
                 msg.react(ctx, '🤖').await.ok();
-                msg.react(ctx, '🚨').await.ok();
                 return;
             }
         };
@@ -94,7 +91,6 @@ pub mod asgard_events {
             Err(e) => {
                 eprintln!("{}", e);
                 msg.react(ctx, '🤖').await.ok();
-                msg.react(ctx, '🚨').await.ok();
                 return;
             }
         };
