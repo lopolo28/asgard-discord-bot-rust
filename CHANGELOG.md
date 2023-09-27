@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.13](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.12...v1.0.13) (2023-09-27)
+
+
+### Features
+
+* Added more information into about command. Also added secret but important feature ([5f1a47c](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/5f1a47c7b9f7a70e074f091ef2d6e1f59f5cc098))
+
 ## [1.0.12](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.11...v1.0.12) (2023-07-08)
 
 
