@@ -36,6 +36,8 @@ impl EventHandler for Handler {
         }
     }
     async fn ready(&self, ctx: Context, _: serenity::model::prelude::Ready) {
+        // Runs when Handler is ready
+        return;
         ctx.set_activity(Some(ActivityData::competing("YOUR MOM")));
     }
 }
