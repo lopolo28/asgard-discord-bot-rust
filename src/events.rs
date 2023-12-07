@@ -83,7 +83,7 @@ pub mod asgard_events {
         };
 
         let mut headers: RaxiosHeaders = RaxiosHeaders::new();
-        headers.insert(String::from("discord-id"), msg.author.id.0.to_string());
+        headers.insert(String::from("discord-id"), msg.author.id.to_string());
         let uri = env::var("API_URL").expect("API_URL not found");
 
         let client = match Raxios::new(&uri, None) {
@@ -143,5 +143,4 @@ pub mod asgard_events {
         }
         Err("Attribute not found")
     }
-    
 }
