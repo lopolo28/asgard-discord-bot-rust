@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.13...v1.1.0) (2023-12-31)
+
+
+### Features
+
+* add twitter replacer ([369f18b](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/369f18b05f5707b477a7b7a99fd907bc6703c4bf))
+
+
+### Bug Fixes
+
+* replace twitter inside message ([da54046](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/da54046e24bf65e8353adc22c06d1f12895f36ca))
+
 ## [1.0.13](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.0.12...v1.0.13) (2023-09-27)
 
 
