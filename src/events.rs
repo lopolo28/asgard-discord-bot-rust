@@ -14,6 +14,22 @@ pub mod asgard_events {
         imdbId: String,
     }
 
+    // array of base urls to replace
+    static TWITTER_BASE_URLS: [&'static str; 2] = ["https://twitter.com/", "https://x.com/"];
+
+    pub async fn on_message_twitter(ctx: &Context, msg: &Message) {
+        // find first element who match with any of the base urls
+        let base_url = TWITTER_BASE_URLS.iter().find(|&i| msg.content.starts_with(i));
+
+        if base_url.is_some() {
+            // constant with replace content
+            let replace_base_url = "https://vxtwitter.com/";
+            // replace msg content with new base url
+            let replaced_msg = msg.content.replacen(base_url.unwrap(), replace_base_url, 1);
+            msg.reply(ctx, replaced_msg).await.ok();
+        }
+    }
+
     pub async fn onmessage(ctx: &Context, msg: &Message) {
         if msg.content.starts_with("https://letterboxd.com/") {
             let response = reqwest::get(&msg.content)

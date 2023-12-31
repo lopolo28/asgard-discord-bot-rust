@@ -7,6 +7,7 @@ use std::env;
 
 mod events;
 use events::asgard_events::onmessage;
+use crate::events::asgard_events::on_message_twitter;
 
 // #[derive(serde::Serialize, serde::Deserialize, Debug)]
 // struct ToReceive {
@@ -32,6 +33,8 @@ impl EventHandler for Handler {
         let moviechannel = str::parse::<u64>(&envid).expect("Unable to parse CHANNEL_ID to u64");
         if msg.channel_id.0 == moviechannel {
             onmessage(&ctx, &msg).await;
+        } else {
+            on_message_twitter(&ctx, &msg).await;
         }
     }
     async fn ready(&self, ctx: Context, _: serenity::model::prelude::Ready) {
