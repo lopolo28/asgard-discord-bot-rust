@@ -19,7 +19,7 @@ pub mod asgard_events {
 
     pub async fn on_message_twitter(ctx: &Context, msg: &Message) {
         // find first element who match with any of the base urls
-        let base_url = TWITTER_BASE_URLS.iter().find(|&i| msg.content.starts_with(i));
+        let base_url = TWITTER_BASE_URLS.iter().find(|&i| msg.content.contains(i));
 
         if base_url.is_some() {
             // constant with replace content
