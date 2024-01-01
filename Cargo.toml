@@ -12,8 +12,8 @@ opt-level = 3
 [dependencies]
 parsercher = "3.1.6"
 raxios = "0.5.2"
-regex = "1.8.4"
-serde = "1.0.164"
+regex = "1.10.2"
+serde = "1.0.193"
 serenity = "0.11.6"
 tokio = { version = "1.29.1", features = ["rt", "full"] }
 reqwest = { version = "0.11.18", features = ["blocking"] }

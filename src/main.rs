@@ -6,18 +6,8 @@ use serenity::prelude::*;
 use std::env;
 
 mod events;
-use events::asgard_events::onmessage;
 use crate::events::asgard_events::on_message_twitter;
-
-// #[derive(serde::Serialize, serde::Deserialize, Debug)]
-// struct ToReceive {
-//     field1: String,
-// }
-
-// #[derive(serde::Serialize, serde::Deserialize, Debug)]
-// struct ToSend {
-//     field1: String,
-// }
+use events::asgard_events::onmessage;
 
 #[group]
 #[commands(about, ping)]
@@ -38,7 +28,8 @@ impl EventHandler for Handler {
         }
     }
     async fn ready(&self, ctx: Context, _: serenity::model::prelude::Ready) {
-        ctx.set_activity(serenity::model::gateway::Activity::competing("YOUR MOM")).await;
+        ctx.set_activity(serenity::model::gateway::Activity::watching("Stuff"))
+            .await;
     }
 }
 
@@ -85,7 +76,11 @@ async fn ping(ctx: &Context, msg: &Message) -> CommandResult {
 async fn about(ctx: &Context, msg: &Message) -> CommandResult {
     msg.reply(
         ctx,
-        "Here is source code: https://github.com/4sgard-dev/asgard-discord-bot-rust\r\n💾 - Bot Happy\r\n🤖 - Bot Error\r\n🚨 - Server Error\r\n🥵 - Duplicate Suggestion",
+        r#"Here is source code: https://github.com/4sgard-dev/asgard-discord-bot-rust
+💾 - Bot Happy
+🤖 - Bot Error
+🚨 - Server Error
+🥵 - Duplicate Suggestion"#,
     )
     .await?;
     Ok(())
