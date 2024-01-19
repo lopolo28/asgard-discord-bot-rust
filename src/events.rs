@@ -2,6 +2,7 @@ pub mod asgard_events {
     use parsercher::{dom::Tag, parse};
     use raxios::{ContentType, Raxios, RaxiosHeaders, RaxiosOptions};
     use regex::Regex;
+    use serenity::builder::{EditMessage, Builder};
     use serenity::client::Context;
     use serenity::model::prelude::Message;
     use std::env;
@@ -15,14 +16,33 @@ pub mod asgard_events {
     }
 
     // array of base urls to replace
-    static TWITTER_BASE_URLS: [&'static str; 2] = ["https://twitter.com/", "https://x.com/"];
+    static TWITTER_BASE_URLS: [&str; 2] = ["https://twitter.com/", "https://x.com/"];
     static REPLACE_BASE_URL: &str = "https://vxtwitter.com/";
 
     pub async fn on_message_twitter(ctx: &Context, msg: &Message) {
         let mut replaced_msg = msg.content.clone();
-        
-        if TWITTER_BASE_URLS.iter().find(|i| replaced_msg.contains(*i)).is_some() {
-            replaced_msg = replaced_msg.replace(TWITTER_BASE_URLS.iter().find(|&i| replaced_msg.contains(i)).unwrap(), REPLACE_BASE_URL);
+
+        if TWITTER_BASE_URLS
+            .iter()
+            .find(|i| replaced_msg.contains(*i))
+            .is_some()
+        {
+            replaced_msg = replaced_msg.replace(
+                TWITTER_BASE_URLS
+                    .iter()
+                    .find(|&i| replaced_msg.contains(i))
+                    .unwrap(),
+                REPLACE_BASE_URL,
+            );
+            let builder = EditMessage::new().suppress_embeds(true);
+
+            match builder.execute(ctx, (msg.channel_id,msg.id)).await {
+                Ok(_) => (),
+                Err(e) => {
+                    println!("Error: {:?}", e);
+                }
+            };
+
             msg.reply(ctx, replaced_msg).await.ok();
         }
     }
@@ -96,7 +116,7 @@ pub mod asgard_events {
         };
 
         let mut headers: RaxiosHeaders = RaxiosHeaders::new();
-        headers.insert(String::from("discord-id"), msg.author.id.0.to_string());
+        headers.insert(String::from("discord-id"), msg.author.id.to_string());
         let uri = env::var("API_URL").expect("API_URL not found");
 
         let client = match Raxios::new(&uri, None) {
@@ -136,7 +156,6 @@ pub mod asgard_events {
         };
         msg.react(ctx, reaction_emoji).await.ok();
     }
-
     async fn find_imdb_url(input: &str) -> Result<&str, &'static str> {
         let mut remaining = input;
         while let Some(a_start) = remaining.find("<a ") {
