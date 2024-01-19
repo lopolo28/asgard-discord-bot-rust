@@ -21,7 +21,6 @@ pub mod asgard_events {
 
     pub async fn on_message_twitter(ctx: &Context, msg: &Message) {
         let mut replaced_msg = msg.content.clone();
-
         if TWITTER_BASE_URLS
             .iter()
             .find(|i| replaced_msg.contains(*i))
@@ -42,7 +41,6 @@ pub mod asgard_events {
                     println!("Error: {:?}", e);
                 }
             };
-
             msg.reply(ctx, replaced_msg).await.ok();
         }
     }
