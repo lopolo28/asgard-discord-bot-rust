@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.3...v1.1.4) (2024-01-20)
+
+
+### Bug Fixes
+
+* Implemented embed suppress ([bd96faa](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/bd96faafae4726336054c9dae64734dd1fc02b7a))
+
 ## [1.1.3](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.2...v1.1.3) (2024-01-20)
 
 
