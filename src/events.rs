@@ -2,6 +2,7 @@ pub mod asgard_events {
     use parsercher::{dom::Tag, parse};
     use raxios::{ContentType, Raxios, RaxiosHeaders, RaxiosOptions};
     use regex::Regex;
+    use serenity::builder::{EditMessage,Builder};
     use serenity::client::Context;
     use serenity::model::prelude::Message;
     use std::env;
@@ -24,6 +25,12 @@ pub mod asgard_events {
         if TWITTER_BASE_URLS.iter().find(|i| replaced_msg.contains(*i)).is_some() {
             replaced_msg = replaced_msg.replace(TWITTER_BASE_URLS.iter().find(|&i| replaced_msg.contains(i)).unwrap(), REPLACE_BASE_URL);
             msg.reply(ctx, replaced_msg).await.ok();
+            match EditMessage::new().suppress_embeds(true).execute(ctx, (msg.channel_id,msg.id)).await {
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("Error: {}", e);
+                }
+            }
         }
     }
 
