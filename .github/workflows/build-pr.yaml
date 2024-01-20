@@ -8,6 +8,7 @@ name: Build and Test application on PR
 on:
   pull_request:
     branches: [ master ]
+  merge_group:
   workflow_dispatch:
 
 env:
