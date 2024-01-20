@@ -15,7 +15,7 @@ pub mod asgard_events {
     }
 
     // array of base urls to replace
-    static TWITTER_BASE_URLS: [&'static str; 2] = ["https://twitter.com/", "https://x.com/"];
+    static TWITTER_BASE_URLS: [&str; 2] = ["https://twitter.com/", "https://x.com/"];
     static REPLACE_BASE_URL: &str = "https://vxtwitter.com/";
 
     pub async fn on_message_twitter(ctx: &Context, msg: &Message) {
@@ -96,7 +96,7 @@ pub mod asgard_events {
         };
 
         let mut headers: RaxiosHeaders = RaxiosHeaders::new();
-        headers.insert(String::from("discord-id"), msg.author.id.0.to_string());
+        headers.insert(String::from("discord-id"), msg.author.id.to_string());
         let uri = env::var("API_URL").expect("API_URL not found");
 
         let client = match Raxios::new(&uri, None) {
