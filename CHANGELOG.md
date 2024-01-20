@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.3](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.2...v1.1.3) (2024-01-20)
+
+
+### Bug Fixes
+
+* change docker base image runtime ([0fc81f1](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/0fc81f145edf65a4a69319a2adb6912d589e2968))
+* update base image to debian bookworm ([07f27c3](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/07f27c3031212aa04081cdb555b5d9121f95f68d))
+
 ## [1.1.2](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.1...v1.1.2) (2024-01-20)
 
 
