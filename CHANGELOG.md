@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.1...v1.1.2) (2024-01-20)
+
+
+### Bug Fixes
+
+* Dependencies update twitter ember suppress ([cb726ba](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/cb726babfcd3a328146ee711525deac8ba4bc996))
+* Updated Rust version in Dockerfile ([f2152d1](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/f2152d1f49dc063a58de8328df10bcfab04f4527))
+
 ## [1.1.1](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.0...v1.1.1) (2024-01-01)
 
 
