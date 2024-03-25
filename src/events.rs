@@ -1,11 +1,13 @@
 pub mod asgard_events {
+    //use raxios::{ContentType, Raxios, RaxiosHeaders, RaxiosOptions};
     use parsercher::{dom::Tag, parse};
-    use raxios::{ContentType, Raxios, RaxiosHeaders, RaxiosOptions};
     use regex::Regex;
-    use serenity::builder::{EditMessage,Builder};
+    use serde::Serialize;
+    use serenity::builder::{Builder, EditMessage};
     use serenity::client::Context;
     use serenity::model::prelude::Message;
-    use std::env;
+
+    use crate::PbClient;
 
     #[derive(serde::Serialize, serde::Deserialize, Debug, PartialEq)]
     struct ToReturn {}
@@ -15,17 +17,40 @@ pub mod asgard_events {
         imdbId: String,
     }
 
+    #[allow(non_snake_case)]
+    #[derive(Debug, Clone, Serialize)]
+    struct NewSuggestion {
+        imdbId: String,
+        suggestion: bool,
+        deleted: bool,
+    }
+
     // array of base urls to replace
     static TWITTER_BASE_URLS: [&str; 2] = ["https://twitter.com/", "https://x.com/"];
     static REPLACE_BASE_URL: &str = "https://vxtwitter.com/";
 
     pub async fn on_message_twitter(ctx: &Context, msg: &Message) {
         let mut replaced_msg = msg.content.clone();
-        
-        if TWITTER_BASE_URLS.iter().find(|i| replaced_msg.contains(*i)).is_some() {
-            replaced_msg = replaced_msg.replace(TWITTER_BASE_URLS.iter().find(|&i| replaced_msg.contains(i)).unwrap(), REPLACE_BASE_URL);
+
+        if TWITTER_BASE_URLS
+            .iter()
+            .find(|i| replaced_msg.contains(*i))
+            .is_some()
+        {
+            replaced_msg = replaced_msg.replace(
+                TWITTER_BASE_URLS
+                    .iter()
+                    .find(|&i| replaced_msg.contains(i))
+                    .unwrap(),
+                REPLACE_BASE_URL,
+            );
             msg.reply(ctx, replaced_msg).await.ok();
-            match EditMessage::new().suppress_embeds(true).execute(ctx, (msg.channel_id,msg.id)).await {
+
+            match EditMessage::new()
+                .suppress_embeds(true)
+                .execute(ctx, (msg.channel_id, msg.id, Some(msg.author.id)))
+                .await
+            {
                 Ok(_) => {}
                 Err(e) => {
                     eprintln!("Error: {}", e);
@@ -101,45 +126,58 @@ pub mod asgard_events {
                 return;
             }
         };
+        let new_suggestion = NewSuggestion {
+            imdbId: link,
+            suggestion: true,
+            deleted: false,
+        };
 
-        let mut headers: RaxiosHeaders = RaxiosHeaders::new();
-        headers.insert(String::from("discord-id"), msg.author.id.to_string());
-        let uri = env::var("API_URL").expect("API_URL not found");
+        let rw_lock_client = ctx.data.read().await;
 
-        let client = match Raxios::new(&uri, None) {
-            Ok(client) => client,
+        let client = rw_lock_client.get::<PbClient>().unwrap();
+
+        let create_response = client.records("movies").create(&new_suggestion).call();
+
+        // let mut headers: RaxiosHeaders = RaxiosHeaders::new();
+        // headers.insert(String::from("discord-id"), msg.author.id.to_string());
+        // let uri = env::var("API_URL").expect("API_URL not found");
+        //
+        // let client = match Raxios::new(&uri, None) {
+        //     Ok(client) => client,
+        //     Err(e) => {
+        //         eprintln!("{}", e);
+        //         msg.react(ctx, '🤖').await.ok();
+        //         return;
+        //     }
+        // };
+        //
+        // let options: RaxiosOptions = RaxiosOptions {
+        //     headers: Option::from(headers),
+        //     accept: Option::None,
+        //     content_type: Option::from(ContentType::Json),
+        //     params: None,
+        //     deserialize_body: false,
+        // };
+        // let request = client.post::<ToReturn, ToSend>(
+        //     "/suggestions",
+        //     Option::from(ToSend { imdbId: link }),
+        //     Option::from(options),
+        // );
+        // let response = match request.await {
+        //     Ok(response) => response,
+        //     Err(err) => {
+        //         println!("{}", err);
+        //         msg.react(ctx, '🚨').await.ok();
+        //         return;
+        //     }
+        // };
+
+        let reaction_emoji = match create_response {
+            Ok(_) => '💾',
             Err(e) => {
-                eprintln!("{}", e);
-                msg.react(ctx, '🤖').await.ok();
-                return;
+                eprintln!("Error creating suggestion {}", e);
+                '🚨'
             }
-        };
-
-        let options: RaxiosOptions = RaxiosOptions {
-            headers: Option::from(headers),
-            accept: Option::None,
-            content_type: Option::from(ContentType::Json),
-            params: None,
-            deserialize_body: false,
-        };
-        let request = client.post::<ToReturn, ToSend>(
-            "/suggestions",
-            Option::from(ToSend { imdbId: link }),
-            Option::from(options),
-        );
-        let response = match request.await {
-            Ok(response) => response,
-            Err(err) => {
-                println!("{}", err);
-                msg.react(ctx, '🚨').await.ok();
-                return;
-            }
-        };
-
-        let reaction_emoji = match response.status.as_u16() {
-            201 => '💾',
-            400..=499 => '🚨',
-            _ => '🥵',
         };
         msg.react(ctx, reaction_emoji).await.ok();
     }
