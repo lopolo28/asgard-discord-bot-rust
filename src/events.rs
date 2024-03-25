@@ -1,5 +1,4 @@
 pub mod asgard_events {
-    //use raxios::{ContentType, Raxios, RaxiosHeaders, RaxiosOptions};
     use parsercher::{dom::Tag, parse};
     use regex::Regex;
     use serde::Serialize;
@@ -9,18 +8,11 @@ pub mod asgard_events {
 
     use crate::PbClient;
 
-    #[derive(serde::Serialize, serde::Deserialize, Debug, PartialEq)]
-    struct ToReturn {}
-    #[allow(non_snake_case)]
-    #[derive(serde::Serialize, serde::Deserialize, Debug)]
-    struct ToSend {
-        imdbId: String,
-    }
-
     #[allow(non_snake_case)]
     #[derive(Debug, Clone, Serialize)]
     struct NewSuggestion {
         imdbId: String,
+        createdByDiscordId: String,
         suggestion: bool,
         deleted: bool,
     }
@@ -128,49 +120,23 @@ pub mod asgard_events {
         };
         let new_suggestion = NewSuggestion {
             imdbId: link,
+            createdByDiscordId: msg.author.id.to_string(),
             suggestion: true,
             deleted: false,
         };
 
         let rw_lock_client = ctx.data.read().await;
 
-        let client = rw_lock_client.get::<PbClient>().unwrap();
+        let client = match rw_lock_client.get::<PbClient>() {
+            Some(client) => client,
+            None => {
+                eprintln!("Client not found");
+                msg.react(ctx, '🤖').await.ok();
+                return;
+            }
+        };
 
         let create_response = client.records("movies").create(&new_suggestion).call();
-
-        // let mut headers: RaxiosHeaders = RaxiosHeaders::new();
-        // headers.insert(String::from("discord-id"), msg.author.id.to_string());
-        // let uri = env::var("API_URL").expect("API_URL not found");
-        //
-        // let client = match Raxios::new(&uri, None) {
-        //     Ok(client) => client,
-        //     Err(e) => {
-        //         eprintln!("{}", e);
-        //         msg.react(ctx, '🤖').await.ok();
-        //         return;
-        //     }
-        // };
-        //
-        // let options: RaxiosOptions = RaxiosOptions {
-        //     headers: Option::from(headers),
-        //     accept: Option::None,
-        //     content_type: Option::from(ContentType::Json),
-        //     params: None,
-        //     deserialize_body: false,
-        // };
-        // let request = client.post::<ToReturn, ToSend>(
-        //     "/suggestions",
-        //     Option::from(ToSend { imdbId: link }),
-        //     Option::from(options),
-        // );
-        // let response = match request.await {
-        //     Ok(response) => response,
-        //     Err(err) => {
-        //         println!("{}", err);
-        //         msg.react(ctx, '🚨').await.ok();
-        //         return;
-        //     }
-        // };
 
         let reaction_emoji = match create_response {
             Ok(_) => '💾',
