@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.2.0...v1.2.1) (2024-03-25)
+
+
+### Bug Fixes
+
+* Added createdBy field to NewSuggestion struct ([2736af3](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/2736af39cfb21446c25f19edfa0131c8f4c12048))
+* Added createdby_field ([2736af3](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/2736af39cfb21446c25f19edfa0131c8f4c12048))
+
 ## [1.2.0](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.4...v1.2.0) (2024-03-25)
 
 
