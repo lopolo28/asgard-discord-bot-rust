@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.4...v1.2.0) (2024-03-25)
+
+
+### Features
+
+* New commands for emoji control ([0be8ac1](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/0be8ac19d90692b83b2205722ddfb1649927e74e))
+
+
+### Bug Fixes
+
+* New DB implementation ([0be8ac1](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/0be8ac19d90692b83b2205722ddfb1649927e74e))
+* New DB implementation ([0be8ac1](https://github.com/4sgard-dev/asgard-discord-bot-rust/commit/0be8ac19d90692b83b2205722ddfb1649927e74e))
+
 ## [1.1.4](https://github.com/4sgard-dev/asgard-discord-bot-rust/compare/v1.1.3...v1.1.4) (2024-01-20)
 
 
