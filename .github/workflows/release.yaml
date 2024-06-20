@@ -45,7 +45,7 @@ jobs:
           echo "VERSION=${VERSION:1}" >> $GITHUB_ENV
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94
+        uses: docker/build-push-action@f6010ea70151369b06f0194be1051fbbdff851b2
         with:
           context: .
           push: true
